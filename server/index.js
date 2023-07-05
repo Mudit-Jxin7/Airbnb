@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const imageDownloader = require('image-downloader');
 
 const User = require('./models/User.js')
 
@@ -16,11 +17,12 @@ const jwtSecret = 'fasefraw4r5r3wq45wdfgw34twdfg';
 dotenv.config();
 
 app.use(express.json());
+app.use(cookieParser());
+app.use('/uploads', express.static(__dirname + '/uploads'));
 app.use(cors({
     credentials: true,
     origin: 'http://127.0.0.1:5173',
 }));
-app.use(cookieParser());
 
 mongoose.connect(process.env.MONGO_URL)
 
@@ -84,6 +86,28 @@ app.get('/profile', (req, res) => {
 
 app.post('/logout', (req, res) => {
     res.cookie('token', '').json(true);
+});
+
+app.post('/upload-by-link', async (req, res) => {
+    const { link } = req.body;
+    const newName = 'photo' + Date.now() + '.jpg';
+
+    if (!link) {
+        return res.status(400).json({ error: 'Link is required' });
+    }
+
+    try {
+        await imageDownloader.image({
+            url: link,
+            dest: __dirname + '/uploads/' + newName,
+        });
+
+        // const url = await uploadToS3('/tmp/' + newName, newName, mime.lookup('/tmp/' + newName));
+        res.json(newName);
+    } catch (error) {
+        console.error('Image download error:', error);
+        res.status(500).json({ error: 'Failed to download image' });
+    }
 });
 
 app.listen(4000, () => {
