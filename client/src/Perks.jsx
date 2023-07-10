@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 const Perks = ({ selected, onChange }) => {
   function handleCbClick(ev) {
     const { checked, name } = ev.target;
@@ -120,6 +122,11 @@ const Perks = ({ selected, onChange }) => {
       </label>
     </>
   );
+};
+
+Perks.propTypes = {
+  selected: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default Perks;

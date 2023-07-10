@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import PropTypes from "prop-types";
 
 const PhotosUploader = ({ addedPhotos, onChange }) => {
   const [photoLink, setPhotoLink] = useState("");
@@ -84,6 +85,11 @@ const PhotosUploader = ({ addedPhotos, onChange }) => {
       </div>
     </>
   );
+};
+
+PhotosUploader.propTypes = {
+  addedPhotos: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default PhotosUploader;

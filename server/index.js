@@ -10,6 +10,7 @@ const multer = require('multer');
 const fs = require('fs');
 
 const User = require('./models/User.js')
+const Place = require('./models/Place.js')
 
 const app = express();
 
@@ -126,6 +127,24 @@ app.post('/upload', photosMiddleware.array('photos', 100), (req, res) => {
     }
     res.json(uploadFiles);
 })
+
+app.post('/places', (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
+    const { token } = req.cookies;
+    const {
+        title, address, addedPhotos, description,
+        perks, extraInfo, checkIn, checkOut, maxGuests,
+    } = req.body;
+    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+        if (err) throw err;
+        const placeDoc = await Place.create({
+            owner: userData.id,
+            title, address, addedPhotos, description,
+            perks, extraInfo, checkIn, checkOut, maxGuests,
+        });
+        res.json(placeDoc);
+    });
+});
 
 app.listen(4000, () => {
     console.log('listening on port 4000');
