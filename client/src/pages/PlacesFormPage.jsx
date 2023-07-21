@@ -16,9 +16,8 @@ export default function PlacesFormPage() {
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [maxGuests, setMaxGuests] = useState(1);
+  const [price, setPrice] = useState(100);
   const [redirect, setRedirect] = useState(false);
-  const [price, setPrice] = useState("100");
-
   useEffect(() => {
     if (!id) {
       return;
@@ -153,7 +152,7 @@ export default function PlacesFormPage() {
             />
           </div>
           <div>
-            <h3 className="mt-2 -mb-1">Price per Night</h3>
+            <h3 className="mt-2 -mb-1">Price per night</h3>
             <input
               type="number"
               value={price}
