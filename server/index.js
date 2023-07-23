@@ -11,6 +11,7 @@ const fs = require('fs');
 
 const User = require('./models/User.js')
 const Place = require('./models/Place.js')
+const Booking = require('./models/Booking.js');
 
 const app = express();
 
@@ -185,6 +186,20 @@ app.put('/places', async (req, res) => {
 app.get('/places', async (req, res) => {
     mongoose.connect(process.env.MONGO_URL);
     res.json(await Place.find());
+});
+
+app.post('/booking', async (req, res) => {
+    mongoose.connect(process.env.MONGO_URL);
+    const {
+        place, checkIn, checkOut, numberOfGuests, name, phone, price,
+    } = req.body;
+    Booking.create({
+        place, checkIn, checkOut, numberOfGuests, name, phone, price,
+    }).then((doc) => {
+        res.json(doc);
+    }).catch((err) => {
+        throw err;
+    });
 });
 
 app.listen(4000, () => {
